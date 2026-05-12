@@ -56,7 +56,8 @@ class Program
             Console.WriteLine("2. View Transactions");
             Console.WriteLine("3. View Balance");
             Console.WriteLine("4. Delete Transaction");
-            Console.WriteLine("5. Quit");
+            Console.WriteLine("5. Show Summary");
+            Console.WriteLine("6. Quit");
         
             Console.Write("\nChoose an option: ");
             string choice = Console.ReadLine();
@@ -130,11 +131,34 @@ class Program
                     
                     descriptions.RemoveAt(index - 1);
                     amounts.RemoveAt(index - 1);
-                    File.WriteAllLines(filepath, descriptions.Select((d, i) => $"{d},{amounts[i]}"));
+                    File.WriteAllLines(filepath, descriptions.Select((d,i ) => $"{d}, {amounts[i]}"));
                     Console.WriteLine("Transactions deleted!");
                     break;
                 
-                case "5" :
+                case "5":
+
+                    double totalIncome = 0;
+                    double totalExpenses = 0;
+
+                    foreach (double a in amounts)
+                    {
+                        if (a > 0)
+                        {
+                            totalIncome += a;
+                        }
+                        else
+                        {
+                            totalExpenses += a;
+                        }
+                    }
+
+                    Console.WriteLine("\n--- Summary ---");
+                    Console.WriteLine($"Total income: {currencySymbol}{totalIncome}");
+                    Console.WriteLine($"Total expenses: {currencySymbol} {totalExpenses}");
+                    Console.WriteLine($"Total Amount {currencySymbol} {totalIncome + totalExpenses}");
+                    break;
+                
+                case "6" :
                     Console.WriteLine("Goodbye!");
                     return;
                 default:
