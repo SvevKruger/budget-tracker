@@ -9,6 +9,7 @@ class Program
 
         List<string> descriptions = new List<string>();
         List<double> amounts = new List<double>();
+        List<string> dates = new List<string>();
 
         Console.WriteLine("Welcome to BudgetTracker!");
         Console.WriteLine("Select your currency:");
@@ -43,6 +44,7 @@ class Program
                 string[] parts = line.Split(',');
                 descriptions.Add(parts[0]);
                 amounts.Add(double.Parse(parts[1]));
+                dates.Add(parts[2]);
             }
 
             Console.WriteLine($"Loaded {descriptions.Count} transactions from file.");
@@ -74,11 +76,15 @@ class Program
                         Console.WriteLine("Invalid amount. Try again.");
                         break;
                     }
+
+                    string date = DateTime.Now.ToString("dd/MM/yyyy");
                     descriptions.Add(description);
                     amounts.Add(amount);
-                    File.AppendAllText(filepath, $"{description},{amount}\n");
+                    dates.Add(date);
+                    File.AppendAllText(filepath, $"{description},{amount},{date}\n");
                     Console.WriteLine("Transaction successfully added.");
                     break;
+                
                 case "2":
                     if (descriptions.Count == 0)
                     {
@@ -89,7 +95,7 @@ class Program
                     Console.WriteLine("\n--- Transactions ---");
                     for (int i = 0; i < descriptions.Count; i++)
                     {
-                        Console.WriteLine($"{i + 1}. {descriptions[i]}. {currencySymbol} {amounts[i]}");
+                        Console.WriteLine($"{i + 1}. {dates[i]} | {descriptions[i]}: {currencySymbol} {amounts[i]}");
                     }
                     break;
                 case "3":
@@ -102,8 +108,9 @@ class Program
 
                     Console.WriteLine($"\nYour current balance is {currencySymbol} {balance}");
                     break;
+                
                 case "4":
-
+                    
                     if (descriptions.Count == 0)
                     {
                         Console.WriteLine("No transactions to delete!");
@@ -113,7 +120,7 @@ class Program
                     Console.WriteLine("\n --- Transactions ---");
                     for (int i = 0; i < descriptions.Count; i++)
                     {
-                        Console.WriteLine($"{i + 1}. {descriptions[i]}. {currencySymbol} {amounts[i]}");
+                        Console.WriteLine($"{i + 1}. {dates[i]} | {descriptions[i]}: {currencySymbol} {amounts[i]}");
                     }
 
                     Console.WriteLine("\n Enter transaction number to delete");
@@ -131,7 +138,8 @@ class Program
                     
                     descriptions.RemoveAt(index - 1);
                     amounts.RemoveAt(index - 1);
-                    File.WriteAllLines(filepath, descriptions.Select((d,i ) => $"{d}, {amounts[i]}"));
+                    dates.RemoveAt(index - 1);
+                    File.WriteAllLines(filepath, descriptions.Select((d,i ) => $"{d}, {amounts[i]}, {dates[i]}"));
                     Console.WriteLine("Transactions deleted!");
                     break;
                 
