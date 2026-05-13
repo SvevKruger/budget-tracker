@@ -59,7 +59,8 @@ class Program
             Console.WriteLine("3. View Balance");
             Console.WriteLine("4. Delete Transaction");
             Console.WriteLine("5. Show Summary");
-            Console.WriteLine("6. Quit");
+            Console.WriteLine("6. Search Transactions");
+            Console.WriteLine("7. Quit");
         
             Console.Write("\nChoose an option: ");
             string choice = Console.ReadLine();
@@ -139,7 +140,7 @@ class Program
                     descriptions.RemoveAt(index - 1);
                     amounts.RemoveAt(index - 1);
                     dates.RemoveAt(index - 1);
-                    File.WriteAllLines(filepath, descriptions.Select((d,i ) => $"{d}, {amounts[i]}, {dates[i]}"));
+                    File.WriteAllLines(filepath, descriptions.Select((d,i ) => $"{d},{amounts[i]},{dates[i]}"));
                     Console.WriteLine("Transactions deleted!");
                     break;
                 
@@ -167,6 +168,34 @@ class Program
                     break;
                 
                 case "6" :
+
+                    if (descriptions.Count == 0)
+                    {
+                        Console.WriteLine("No transactions to search!");
+                        break;
+                    }
+
+                    Console.WriteLine("Enter search term:");
+                    string searchTerm = Console.ReadLine().ToLower();
+                    bool found = false;
+
+                    for (int i = 0; i < descriptions.Count; i++)
+                    {
+                        if (descriptions[i].ToLower().Contains(searchTerm))
+                        {
+                            Console.WriteLine($"{i + 1}. {dates[i]} | {descriptions[i]}: {currencySymbol}{amounts[i]}");
+                            found = true;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        Console.WriteLine("No transactions found.");
+                    }
+
+                    break;
+                    
+                case "7" :
                     Console.WriteLine("Goodbye!");
                     return;
                 default:
